@@ -125,7 +125,7 @@
 			}
 
 			if($haveRemote){
-				// Now check the remote respoistory
+				// Now check the remote respoistory for update
 				$sha_local = file_get_contents($github_project_path."/.git/refs/remotes/origin/master", true);
 			
 				if(CLI){
