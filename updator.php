@@ -134,10 +134,10 @@
 
 				if(strcmp(trim($sha_local), $commit_array[0]["sha"]) == 0){
 					if(CLI){
-						echo $output->getColoredString("Good News: Repository (MASTER) is up-to-date", "green", "black")."\n";
+						echo $output->getColoredString("Good News: Repository is up-to-date", "green", "black")."\n";
 					}else{
 						$jsonOutput["action"] = "none";
- 						$jsonOutput["message"] = "Good News: Repository (MASTER) is up-to-date";
+ 						$jsonOutput["message"] = "Good News: Repository is up-to-date";
 						$jsonOutput["color"] = "green";
 
 						if(DEBUG){
