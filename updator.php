@@ -150,11 +150,11 @@
 					}
 				}else{
 					if(CLI){
-						echo $output->getColoredString("UPDATE REQUIRED", "red", "black")."\n";
+						echo $output->getColoredString("Update Required", "red", "black")."\n";
 						echo $output->getColoredString("Run: git pull", "green", "black")."\n";
 					}else{
 						$jsonOutput["action"] = "update";
- 						$jsonOutput["message"] = "UPDATE REQUIRED";
+ 						$jsonOutput["message"] = "Update Required";
 						$jsonOutput["color"] = "red";
 
 						if(DEBUG){

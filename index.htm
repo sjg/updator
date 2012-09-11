@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Updator</title>
+    <!-- Bootstrap -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <br/><br/>
+      <div class="hero-unit">
+        <h1>Updator</h1><br/>
+        <p>
+            A lightweight update alert script for web apps hosted on github written in PHP. Alerts a user that the base project has been updated.
+        </p>
+       
+        <div class="alert fade in updator">
+            <img src="img/spinner.gif" alt="" /> 
+            <strong>Checking</strong>
+        </div>
+
+        <div class="alert fade in updator-fail">
+             <img src="img/spinner.gif" alt="" />
+             <strong>Checking</strong>
+        </div>
+
+      </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+      $(function() {
+         $(".alert").alert();
+         $('.alert').prepend('<a class="close" data-dismiss="alert">x</a>');
+
+         //Make Ajax call to script
+         $.ajax({
+            type: "GET",
+            url: "updator.php",
+            async: false,
+            beforeSend: function(x) {
+            if(x && x.overrideMimeType) {
+              x.overrideMimeType("application/j-son;charset=UTF-8");
+            }
+          },
+          dataType: "json",
+          success: function(data){
+              if(data.action == "none"){
+                    $(".updator").html(data.message);
+                    $(".updator").addClass("alert-success");
+              }else if(data.action == "update"){
+                  $(".updator").html(data.message);
+                  $(".updator").addClass("alert-info");
+              }else{
+                  $(".updator").html(data.message);
+                  $(".updator").addClass("alert-error");
+              }
+              // Stick the Close Tag back in
+              $('.updator').prepend('<a class="close" data-dismiss="alert">x</a>');
+          }
+        });
+
+         //Make Ajax call to script
+         $.ajax({
+            type: "POST",
+            url: "updator.php",
+            data: {"git_user":"sjg","git_repo":"bob", "git_path":"../"},
+            async: false,
+            beforeSend: function(x) {
+            if(x && x.overrideMimeType) {
+              x.overrideMimeType("application/j-son;charset=UTF-8");
+            }
+          },
+          dataType: "json",
+          success: function(data){
+              console.log(data);
+              if(data.action == "none"){
+                    $(".updator-fail").html(data.message);
+                    $(".updator-fail").addClass("alert-success");
+              }else if(data.action == "update"){
+                  $(".updator-fail").html(data.message);
+                  $(".updator-fail").addClass("alert-info");
+              }else{
+                  $(".updator-fail").html(data.error);
+                  $(".updator-fail").addClass("alert-error");
+              }
+              // Stick the Close Tag back in
+              $('.updator-fail').prepend('<a class="close" data-dismiss="alert">x</a>');
+          }
+        });
+
+
+
+
+      });
+    </script>
+  </body>
+</html>
