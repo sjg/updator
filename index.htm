@@ -1,3 +1,14 @@
+
+<!--
+  //
+  //  index.htm
+  //  Updator
+  //
+  //  Created by Steven Gray on 10/09/2012.
+  //  Copyright (c) 2012 Steven Gray.
+  //  MIT Licence [http://opensource.org/licenses/mit-license.php] 
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,12 +30,28 @@
             <strong>Checking</strong>
         </div>
 
+        <div class="alert fade in alert-info">
+            <strong>Repoistory needs to be updated</strong>
+        </div>
+
         <div class="alert fade in updator-fail">
              <img src="img/spinner.gif" alt="" />
              <strong>Checking</strong>
         </div>
 
+        <div class="alert fade in">
+             <img src="img/spinner.gif" alt="" />
+             <strong>Checking</strong>
+        </div>
       </div>
+
+      <div id="footer" class="row-fluid">
+          <p>
+            Created September 2012 by <a href="http://www.stevenjamesgray.com">sjg</a> 
+            for <a href="http://www.bigdatatoolkit.org">BigDataToolkit</a>
+          </p>
+      </div>
+
     </div>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="./js/bootstrap.min.js"></script>
@@ -33,66 +60,41 @@
          $(".alert").alert();
          $('.alert').prepend('<a class="close" data-dismiss="alert">x</a>');
 
-         //Make Ajax call to script
-         $.ajax({
-            type: "GET",
-            url: "updator.php",
-            async: false,
-            beforeSend: function(x) {
-            if(x && x.overrideMimeType) {
-              x.overrideMimeType("application/j-son;charset=UTF-8");
-            }
-          },
-          dataType: "json",
-          success: function(data){
-              if(data.action == "none"){
-                    $(".updator").html(data.message);
-                    $(".updator").addClass("alert-success");
-              }else if(data.action == "update"){
-                  $(".updator").html(data.message);
-                  $(".updator").addClass("alert-info");
-              }else{
-                  $(".updator").html(data.message);
-                  $(".updator").addClass("alert-error");
-              }
-              // Stick the Close Tag back in
-              $('.updator').prepend('<a class="close" data-dismiss="alert">x</a>');
-          }
+         checkGithub(".updator", "sjg", "updator", "./"); 
+         checkGithub(".updator-fail", "sjg", "whatRepo", "./");
+
         });
 
-         //Make Ajax call to script
-         $.ajax({
-            type: "POST",
-            url: "updator.php",
-            data: {"git_user":"sjg","git_repo":"bob", "git_path":"../"},
-            async: false,
-            beforeSend: function(x) {
-            if(x && x.overrideMimeType) {
-              x.overrideMimeType("application/j-son;charset=UTF-8");
-            }
-          },
-          dataType: "json",
-          success: function(data){
-              console.log(data);
-              if(data.action == "none"){
-                    $(".updator-fail").html(data.message);
-                    $(".updator-fail").addClass("alert-success");
-              }else if(data.action == "update"){
-                  $(".updator-fail").html(data.message);
-                  $(".updator-fail").addClass("alert-info");
-              }else{
-                  $(".updator-fail").html(data.error);
-                  $(".updator-fail").addClass("alert-error");
-              }
-              // Stick the Close Tag back in
-              $('.updator-fail').prepend('<a class="close" data-dismiss="alert">x</a>');
-          }
-        });
-
-
-
-
-      });
+      function checkGithub(element, username, repo_name, path_to_repo){
+             //Make Ajax call to script
+            $.ajax({
+                type: "POST",
+                url: "updator.php",
+                data: {"git_user":username,"git_repo":repo_name, "git_path": path_to_repo},
+                async: false,
+                beforeSend: function(x) {
+                  if(x && x.overrideMimeType) {
+                    x.overrideMimeType("application/j-son;charset=UTF-8");
+                  }
+                },
+              dataType: "json",
+              success: function(data){
+                if(data.action == "none"){
+                    $(element).html("<strong>"+data.message+"</strong>");
+                    $(element).addClass("alert-success");
+                }else if(data.action == "update"){
+                    $(element).html("<strong>"+data.message+"</strong>");
+                    $(element).addClass("alert-info");
+                }else{
+                  $(element).html("<strong>"+data.error+"</strong>");
+                  $(element).addClass("alert-error");
+                }
+                
+                // Stick the Close Tag back in
+                $(element).prepend('<a class="close" data-dismiss="alert">x</a>');
+              }  
+            });
+          }        
     </script>
   </body>
 </html>
